@@ -3,6 +3,7 @@ package fr.panicot.ccrg.botting
 import fr.panicot.ccrg.botting.bots.AeninBot
 import fr.panicot.ccrg.botting.bots.AttilaBot
 import fr.panicot.ccrg.botting.bots.ClausseBot
+import fr.panicot.ccrg.botting.bots.BobBot
 import fr.panicot.ccrg.core.messaging.MessageController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
