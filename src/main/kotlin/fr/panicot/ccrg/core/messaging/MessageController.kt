@@ -70,7 +70,7 @@ class MessageController {
     fun announceArrival(@RequestParam("user") user: String, @RequestParam("isArrival") isArrival: Boolean) {
         val requestTime = LocalDateTime.now()
         updateUserLastSeen(user, requestTime)
-        val announcement = user + if (isArrival) " vient de se connecter" else " vient de ragequit"
+        val announcement = if (isArrival) "Un $user sauvage apparaît !" else "$user vient de ragequit !"
         val announcementMessage = Message(counter.incrementAndGet(), requestTime.toLocalTime(), SYSTEM_ANNOUNCEMENT, announcement)
         messages.add(announcementMessage)
     }
