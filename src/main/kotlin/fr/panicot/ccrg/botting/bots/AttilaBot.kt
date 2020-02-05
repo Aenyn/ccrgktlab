@@ -19,7 +19,7 @@ class AttilaBot(messageController: MessageController, random: Random): Bot(messa
         scheduler.schedule(Runnable{messageController.announceArrival("ATTILABOT", true)}, CronTrigger("0 11 10 * * *"))
         scheduler.schedule(Runnable{
             messageController.announceArrival("HUNBOT${armySize.getAndIncrement()}", true)
-        }, CronTrigger("1-59/8 11 9 * * *"))
+        }, CronTrigger("1-59/8 11 10 * * *"))
         scheduler.schedule(Runnable{messageController.announceArrival("ATTILABOT", false)}, CronTrigger("0 12 10 * * *"))
         scheduler.schedule(Runnable{for (i in 0..armySize.get() - 1) {
             messageController.announceArrival("HUNBOT$i", false)
