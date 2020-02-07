@@ -10,7 +10,7 @@ class MessageProcessor(private val message: Message) {
         val messageContent = message.content
         val messageSplit = messageContent.split(" ")
         val urlRegex = Regex("(http(s)?:\\/\\/.)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&/=()]*)")
-        val regex = Regex("\\/?[ru]\\/\\w*")
+        val redditRegex = Regex("\\/?[ru]\\/\\w*")
         val messageProcessed = Message(message.id,message.timestamp,message.author,
                 messageSplit.map { part ->
                     if(part.matches(urlRegex)){
