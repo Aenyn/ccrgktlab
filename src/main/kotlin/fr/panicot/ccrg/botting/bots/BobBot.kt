@@ -14,7 +14,7 @@ class BobBot(messageController: MessageController, random: Random): Bot(messageC
     private val scheduler = ThreadPoolTaskScheduler()
 
     val botNameList = Arrays.asList("BobBot", "bobBot", "BoBot", "boBot")
-    val bandNameList = Arrays.asList("Noisia", "IM")
+    val bandNameList = Arrays.asList("NOISIA", "IM")
 
     override fun start() {
         val todayName = botNameList[random.nextInt(botNameList.size)]
@@ -23,6 +23,6 @@ class BobBot(messageController: MessageController, random: Random): Bot(messageC
         val reminderMinute = random.nextInt(60);
 
         scheduler.initialize()
-        scheduler.schedule(Runnable{messageController.sendMessage(todayName, "daily reminder que $todayBand c'est trop bien")}, CronTrigger("0 $reminderMinute $reminderHour * * *"))
+        scheduler.schedule(Runnable{messageController.sendMessage(todayName, "$todayBand C'EST TROP BIEN")}, CronTrigger("0 $reminderMinute $reminderHour * * *"))
     }
 }
