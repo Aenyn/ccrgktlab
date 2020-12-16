@@ -19,7 +19,7 @@ class EchoBot(messageController: MessageController, random: Random): EasyBot(mes
 
         // don't spam links
         if (lastMessage !== null &&
-                now.minusHours(3).isAfter(lastMessage) &&
+                now.minusHours(2).isAfter(lastMessage) &&
                 !message.content.contains("<a target")) {
             Thread.sleep(500L )
             messageController.announceArrival(currentName, true)
