@@ -23,7 +23,7 @@ open class WebSecurityConfig {
     @Bean
     open fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {
         return http
-            .csrf() {
+            .csrf {
                 it.disable()
             }
             .authorizeHttpRequests() {
