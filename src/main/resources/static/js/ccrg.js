@@ -108,9 +108,8 @@ function addMessages(messageBatch) {
                 window.location.replace('http://www.staggeringbeauty.com/');
             };
         }
-        var hourTemp = (message.timestamp.hour + 1) % 24
-        var hour = hourTemp < 10 ? "0" + hourTemp : "" + hourTemp
-        var minute = message.timestamp.minute < 10 ? "0" + message.timestamp.minute : "" + message.timestamp.minute
+        var hour = "" + message.timestamp.slice(0,2)
+        var minute = "" + message.timestamp.slice(3,5)
         var html = '<div class="message"><span class="message_timestamp">' + hour + ":" + minute
         + '</span><span class="message_author"> ' + message.author
         + '</span><span class="message_content">> ' + message.content + '</span></div>';

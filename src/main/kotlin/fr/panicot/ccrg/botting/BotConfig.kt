@@ -1,10 +1,6 @@
 package fr.panicot.ccrg.botting
 
-import fr.panicot.ccrg.botting.bots.AeninBot
-import fr.panicot.ccrg.botting.bots.AttilaBot
-import fr.panicot.ccrg.botting.bots.BobBot
-import fr.panicot.ccrg.botting.bots.ClausseBot
-import fr.panicot.ccrg.botting.bots.EchoBot
+import fr.panicot.ccrg.botting.bots.*
 import fr.panicot.ccrg.core.messaging.MessageController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -26,6 +22,7 @@ open class BotConfig {
                 AttilaBot(messageController!!, random),
                 AeninBot(messageController!!, random),
                 BobBot(messageController!!, random),
+                SecretCcrgLoggerBot(messageController!!, random),
                 ClausseBot(messageController!!, random),
                 EchoBot(messageController!!, random)
         )

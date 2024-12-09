@@ -1,5 +1,6 @@
 package fr.panicot.ccrg.core.messaging
 
+import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.lang3.StringEscapeUtils
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -10,7 +11,6 @@ import java.time.LocalTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
-import javax.servlet.http.HttpServletRequest
 
 const val SYSTEM_ANNOUNCEMENT = "System announcement"
 

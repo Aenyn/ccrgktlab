@@ -2,15 +2,13 @@ package fr.panicot.ccrg.security
 
 import fr.panicot.ccrg.security.authentication.CCRGAuthenticationProvider
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.PropertySource
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.web.DefaultSecurityFilterChain
 
 
 /**
@@ -19,33 +17,31 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+open class WebSecurityConfig {
 
     @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
-        http
-                .csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/js/**").permitAll()
-                .antMatchers("/css/**").permitAll()
-                .anyRequest().hasRole("USER")
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .failureUrl("/login")
-                .permitAll()
-    }
-
-    @Autowired
-    @Throws(Exception::class)
-    fun configureGlobal(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(authenticationProvider())
+    @Bean
+    open fun filterChain(http: HttpSecurity): DefaultSecurityFilterChain {
+        return http
+            .csrf() {
+                it.disable()
+            }
+            .authorizeHttpRequests() {
+                it.requestMatchers("/js/**").permitAll()
+                    .requestMatchers("/css/**").permitAll()
+                    .anyRequest().hasRole("USER")
+            }
+            .formLogin() {
+                it.loginPage("/login")
+                    .failureUrl("/login")
+                    .permitAll()
+            }
+            .build()
     }
 
     @Bean
-    open fun authenticationProvider(): AuthenticationProvider {
-        val defaultPassword = System.getenv("DEFAULT_PASSWORD")?:""
+    open fun ccrgAuthenticationProvider(): AuthenticationProvider {
+        val defaultPassword = System.getenv("DEFAULT_PASSWORD") ?: "Raviolis 4Ever"
         return CCRGAuthenticationProvider(defaultPassword)
     }
 }
