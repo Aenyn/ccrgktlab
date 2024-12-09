@@ -43,7 +43,7 @@ class SecretCcrgLoggerBot(messageController: MessageController, random: Random):
             if(event.author.isBot) return
             val message = event.message
             val content: String = message.contentRaw
-            messageController.sendMessage(event.author.name, content)
+            messageController.sendMessage(event.author.effectiveName, content)
         }
     }
 }

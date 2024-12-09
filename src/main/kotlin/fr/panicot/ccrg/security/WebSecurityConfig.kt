@@ -29,6 +29,7 @@ open class WebSecurityConfig {
             .authorizeHttpRequests() {
                 it.requestMatchers("/js/**").permitAll()
                     .requestMatchers("/css/**").permitAll()
+                    .requestMatchers("/favicon.ico").permitAll()
                     .anyRequest().hasRole("USER")
             }
             .formLogin() {
