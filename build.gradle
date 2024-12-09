@@ -42,7 +42,9 @@ jar {
         attributes 'Main-Class': 'fr.panicot.ccrg.ApplicationKt'
     }
 
-    from { configurations.implementation.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
 task stage(dependsOn: ['build'])
