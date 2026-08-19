@@ -41,6 +41,7 @@ class SecretCcrgLoggerBot(messageController: MessageController, random: Random):
     class MessageListener(val messageController: MessageController): ListenerAdapter() {
         override fun onMessageReceived(event: MessageReceivedEvent) {
             if(event.author.isBot) return
+            if(event.author.effectiveName.endsWith("Bot") return
             val message = event.message
             val content: String = message.contentRaw
             messageController.sendMessage(event.author.effectiveName, content)
