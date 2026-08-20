@@ -30,6 +30,7 @@ class SecretCcrgLoggerBot(messageController: MessageController, random: Random):
     }
 
     override fun executeOnNewMessage(message: Message) {
+        if (message.author.endsWith("Bot")) return
         messageChannel.sendMessage("${message.author} said: ${message.content}")
             .queue()
     }
