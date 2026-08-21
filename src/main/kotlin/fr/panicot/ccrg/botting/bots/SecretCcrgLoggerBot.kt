@@ -4,6 +4,7 @@ import fr.panicot.ccrg.botting.EasyBot
 import fr.panicot.ccrg.botting.util.SchedulableTask
 import fr.panicot.ccrg.core.messaging.Message
 import fr.panicot.ccrg.core.messaging.MessageController
+import fr.panicot.ccrg.core.messaging.SYSTEM_ANNOUNCEMENT
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Guild
@@ -30,9 +31,28 @@ class SecretCcrgLoggerBot(messageController: MessageController, random: Random):
     }
 
     override fun executeOnNewMessage(message: Message) {
-        if (message.author.endsWith("Bot")) return
+        if (isBot(message.author)) return
+        if (isBotAnnouncement(message)) return
         messageChannel.sendMessage("${message.author} said: ${message.content}")
             .queue()
+    }
+
+    private fun isBot(name: String): Boolean {
+        return name.contains("bot", ignoreCase = true)
+    }
+
+    private fun isBotAnnouncement(message: Message): Boolean {
+        if (message.author != SYSTEM_ANNOUNCEMENT) return false
+        val content = message.content
+        if (content.startsWith("Un ") && content.endsWith(" sauvage apparaît !")) {
+            val user = content.removePrefix("Un ").removeSuffix(" sauvage apparaît !")
+            return isBot(user)
+        }
+        if (content.endsWith(" vient de ragequit !")) {
+            val user = content.removeSuffix(" vient de ragequit !")
+            return isBot(user)
+        }
+        return false
     }
 
     override fun getTasksToSchedule(): Collection<SchedulableTask> {
