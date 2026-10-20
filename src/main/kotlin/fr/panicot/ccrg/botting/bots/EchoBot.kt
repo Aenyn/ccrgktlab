@@ -5,21 +5,23 @@ import fr.panicot.ccrg.botting.util.SchedulableTask
 import fr.panicot.ccrg.core.messaging.Message
 import fr.panicot.ccrg.core.messaging.MessageController
 import fr.panicot.ccrg.core.messaging.SYSTEM_ANNOUNCEMENT
-import java.time.LocalDateTime
+import java.time.Duration
+import java.time.Instant
 import java.util.*
 
 class EchoBot(messageController: MessageController, random: Random): EasyBot(messageController, random) {
     var currentName = "EchoBot"
-    var lastMessage: LocalDateTime? = null
+    var lastMessage: Instant? = null
 
     override fun executeOnNewMessage(message: Message) {
         if (message.author == SYSTEM_ANNOUNCEMENT || message.author.endsWith("Bot")) return
 
-        val now = LocalDateTime.now()
+        val now = Instant.now()
+        val previousMessage = lastMessage
 
         // don't spam links
-        if (lastMessage !== null &&
-                now.minusHours(2).isAfter(lastMessage) &&
+        if (previousMessage !== null &&
+                Duration.between(previousMessage, now) > Duration.ofHours(2) &&
                 !message.content.contains("<a target")) {
             Thread.sleep(500L )
             messageController.announceArrival(currentName, true)

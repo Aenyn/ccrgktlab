@@ -34,8 +34,7 @@ function checkCommands(message) {
         setAfk()
         return false
     } if(empty.test(message)) {
-        var date = new Date()
-        addMessages({messages:[{"author":"Local announcement", "content":"Vous ne pouvez pas envoyer de message vide", "timestamp":{"hour":date.getHours(),"minute":date.getMinutes()}}]})
+        addMessages({messages:[{"author":"Local announcement", "content":"Vous ne pouvez pas envoyer de message vide", "timestamp":Date.now()}]})
         return false
      } else {
         return true
@@ -92,6 +91,16 @@ function getMessages() {
     return false;
 }
 
+function formatTimestamp(timestamp) {
+    var date = new Date(timestamp);
+    if (isNaN(date.getTime())) {
+        return "";
+    }
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    return (hour < 10 ? "0" + hour : "" + hour) + ":" + (minute < 10 ? "0" + minute : "" + minute);
+}
+
 function addMessages(messageBatch) {
     var allMessages = "";
     if(!isActive) {
@@ -108,9 +117,8 @@ function addMessages(messageBatch) {
                 window.location.replace('http://www.staggeringbeauty.com/');
             };
         }
-        var hour = "" + message.timestamp.slice(0,2)
-        var minute = "" + message.timestamp.slice(3,5)
-        var html = '<div class="message"><span class="message_timestamp">' + hour + ":" + minute
+        var time = formatTimestamp(message.timestamp)
+        var html = '<div class="message"><span class="message_timestamp">' + time
         + '</span><span class="message_author"> ' + message.author
         + '</span><span class="message_content">> ' + message.content + '</span></div>';
         allMessages = allMessages + html;

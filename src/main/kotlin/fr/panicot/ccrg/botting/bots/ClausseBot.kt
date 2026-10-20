@@ -2,6 +2,7 @@ package fr.panicot.ccrg.botting.bots
 
 import fr.panicot.ccrg.botting.Bot
 import fr.panicot.ccrg.core.messaging.MessageController
+import fr.panicot.ccrg.core.time.CCRG_ZONE
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.scheduling.support.CronTrigger
 import java.time.LocalDate
@@ -19,7 +20,7 @@ class ClausseBot(messageController: MessageController, random: Random): Bot(mess
 
     override fun start() {
         scheduler.initialize()
-        scheduler.schedule(Runnable{changeState()}, CronTrigger("0 * 9-16 * * *"))
+        scheduler.schedule(Runnable{changeState()}, CronTrigger("0 * 9-16 * * *", CCRG_ZONE))
     }
 
     fun changeState() {
@@ -60,7 +61,7 @@ class ClausseBot(messageController: MessageController, random: Random): Bot(mess
 
     fun hasConnectedToday() : Boolean {
         val previousConnectionDay = lastConnectionDay
-        lastConnectionDay = LocalDate.now()
+        lastConnectionDay = LocalDate.now(CCRG_ZONE)
         return previousConnectionDay == lastConnectionDay
     }
 

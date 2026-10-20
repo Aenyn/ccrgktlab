@@ -30,11 +30,5 @@ class MessageProcessor(private val message: Message) {
         return MessageProcessor(messageProcessed)
     }
 
-    fun adjustTime(timeDifference: Long): MessageProcessor {
-        val messageProcessed = Message(message.id, message.timestamp.plusHours(timeDifference), message.author, message.content)
-        return MessageProcessor(messageProcessed)
-
-    }
-
     fun finalizeMessage(): Message { return message }
 }

@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.time.LocalDateTime
-import java.time.LocalTime
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
@@ -44,8 +43,8 @@ class MessageController {
 
     @RequestMapping("/messages/send", method = arrayOf(RequestMethod.POST))
     fun sendMessage(@RequestParam("author") author: String, @RequestParam("content") content: String, @RequestParam("author") recipient: String? = null) {
-        val timestamp = LocalDateTime.now()
-        val initialMessage = Message(counter.incrementAndGet(), timestamp.toLocalTime(), author, content, recipient)
+        val timestamp = Instant.now()
+        val initialMessage = Message(counter.incrementAndGet(), timestamp, author, content, recipient)
         val processedMessage = processMessage(initialMessage)
         if (processedMessage.content.isNotBlank()) messages.add(processedMessage)
     }
@@ -59,9 +58,9 @@ class MessageController {
     fun getMe(request: HttpServletRequest): User {
         val username = StringEscapeUtils.escapeHtml4(request.remoteUser)
         return if (users.containsKey(username)) {
-            users[username] ?: User(username, false, LocalDateTime.now())
+            users[username] ?: User(username, false, Instant.now())
         } else {
-            val user = User(username, false, LocalDateTime.now())
+            val user = User(username, false, Instant.now())
             users.put(username, user)
             user
         }
@@ -69,16 +68,16 @@ class MessageController {
 
     @RequestMapping("/users/announce", method = arrayOf(RequestMethod.POST))
     fun announceArrival(@RequestParam("user") user: String, @RequestParam("isArrival") isArrival: Boolean) {
-        val requestTime = LocalDateTime.now()
+        val requestTime = Instant.now()
         updateUserLastSeen(user, requestTime)
         val announcement = if (isArrival) "Un $user sauvage apparaît !" else "$user vient de ragequit !"
-        val announcementMessage = Message(counter.incrementAndGet(), requestTime.toLocalTime(), SYSTEM_ANNOUNCEMENT, announcement)
+        val announcementMessage = Message(counter.incrementAndGet(), requestTime, SYSTEM_ANNOUNCEMENT, announcement)
         messages.add(announcementMessage)
     }
 
     @RequestMapping("/users/keepalive", method = arrayOf(RequestMethod.GET))
     fun keepAlive(@RequestParam("user") user: String): String {
-        val requestTime = LocalDateTime.now()
+        val requestTime = Instant.now()
         updateUserLastSeen(user, requestTime)
         return "ok"
     }
@@ -111,16 +110,16 @@ class MessageController {
     fun doKick(userToKick: String) {
         val user = users[userToKick]
         if (user != null) {
-            messages.add(Message(counter.incrementAndGet(), LocalTime.now(), SYSTEM_ANNOUNCEMENT, "$userToKick vient de se faire kicker"))
-            messages.add(Message(counter.incrementAndGet(), LocalTime.now(), SYSTEM_ANNOUNCEMENT, "Hahaha pates a la carbonarrache, excellent", userToKick, "kick"))
+            messages.add(Message(counter.incrementAndGet(), Instant.now(), SYSTEM_ANNOUNCEMENT, "$userToKick vient de se faire kicker"))
+            messages.add(Message(counter.incrementAndGet(), Instant.now(), SYSTEM_ANNOUNCEMENT, "Hahaha pates a la carbonarrache, excellent", userToKick, "kick"))
         }
     }
 
     fun setOrUnsetAfk(user: String, afk: Boolean) {
-        val requestTime = LocalDateTime.now()
+        val requestTime = Instant.now()
         updateUserLastSeen(user, requestTime, afk)
         val announcement = user + if (afk) " est maintenant afk" else " n'est plus afk"
-        val afkMessage = Message(counter.incrementAndGet(), requestTime.toLocalTime(), SYSTEM_ANNOUNCEMENT, announcement)
+        val afkMessage = Message(counter.incrementAndGet(), requestTime, SYSTEM_ANNOUNCEMENT, announcement)
         messages.add(afkMessage)
 
     }
@@ -134,11 +133,12 @@ class MessageController {
     }
 
     fun getActiveUsers(): List<User> {
-        val requestTime = LocalDateTime.now()
-        return users.filter { user -> user.value.lastSeen.isAfter(requestTime.minusMinutes(5L)) }.map { user -> user.value }.sortedBy { user -> user.name }
+        val requestTime = Instant.now()
+        val activeSince = requestTime.minusSeconds(5L * 60L)
+        return users.filter { user -> user.value.lastSeen.isAfter(activeSince) }.map { user -> user.value }.sortedBy { user -> user.name }
     }
 
-    fun updateUserLastSeen(author: String, timestamp: LocalDateTime) {
+    fun updateUserLastSeen(author: String, timestamp: Instant) {
         if (users.containsKey(author)) {
             users[author]?.lastSeen = timestamp
         } else {
@@ -146,7 +146,7 @@ class MessageController {
         }
     }
 
-    fun updateUserLastSeen(author: String, timestamp: LocalDateTime, afk: Boolean) {
+    fun updateUserLastSeen(author: String, timestamp: Instant, afk: Boolean) {
         if (users.containsKey(author)) {
             users[author]?.lastSeen = timestamp
             users[author]?.afk = afk
@@ -163,7 +163,6 @@ class MessageController {
         return MessageProcessor(message)
                 .escapeHtmlTags()
                 .processLinks()
-                .adjustTime(System.getProperty("TIME_DIFFERENCE", "0").toLong())
                 .finalizeMessage()
     }
 }

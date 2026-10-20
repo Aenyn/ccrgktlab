@@ -2,6 +2,7 @@ package fr.panicot.ccrg.botting.bots
 
 import fr.panicot.ccrg.botting.Bot
 import fr.panicot.ccrg.core.messaging.MessageController
+import fr.panicot.ccrg.core.time.CCRG_ZONE
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.scheduling.support.CronTrigger
 import java.util.*
@@ -23,6 +24,6 @@ class BobBot(messageController: MessageController, random: Random): Bot(messageC
         val reminderMinute = random.nextInt(60);
 
         scheduler.initialize()
-        scheduler.schedule(Runnable{messageController.sendMessage(todayName, "$todayBand C'EST TROP BIEN")}, CronTrigger("0 $reminderMinute $reminderHour * * *"))
+        scheduler.schedule(Runnable{messageController.sendMessage(todayName, "$todayBand C'EST TROP BIEN")}, CronTrigger("0 $reminderMinute $reminderHour * * *", CCRG_ZONE))
     }
 }

@@ -1,5 +1,6 @@
 package fr.panicot.ccrg.core
 
+import fr.panicot.ccrg.core.time.CCRG_ZONE
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
@@ -16,7 +17,7 @@ open class AutoRestartConfig {
     @Bean
     open fun scheduleRestart(): Boolean {
         executor.initialize()
-        executor.schedule(Runnable{System.exit(0)}, CronTrigger("0 0 3 * * *"))
+        executor.schedule(Runnable{System.exit(0)}, CronTrigger("0 0 3 * * *", CCRG_ZONE))
         return true
     }
 }
