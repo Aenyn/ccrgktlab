@@ -2,7 +2,7 @@ package fr.panicot.ccrg.botting.bots
 
 import fr.panicot.ccrg.botting.Bot
 import fr.panicot.ccrg.core.messaging.MessageController
-import fr.panicot.ccrg.core.time.CCRG_ZONE
+import fr.panicot.ccrg.core.CCRG_ZONE
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.scheduling.support.CronTrigger
 import java.time.LocalDate
